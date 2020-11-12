@@ -1,0 +1,6 @@
+F:\moana\ExifDateTimeMaker\MOANA-RED\bin\Debug\ExifDateTimeMaker.exe.config
+F:\moana\ExifDateTimeMaker\MOANA-RED\bin\Debug\ExifDateTimeMaker.exe
+F:\moana\ExifDateTimeMaker\MOANA-RED\bin\Debug\ExifDateTimeMaker.pdb
+F:\moana\ExifDateTimeMaker\MOANA-RED\obj\Debug\ExifDateTimeMaker.csproj.CoreCompileInputs.cache
+F:\moana\ExifDateTimeMaker\MOANA-RED\obj\Debug\ExifDateTimeMaker.exe
+F:\moana\ExifDateTimeMaker\MOANA-RED\obj\Debug\ExifDateTimeMaker.pdb

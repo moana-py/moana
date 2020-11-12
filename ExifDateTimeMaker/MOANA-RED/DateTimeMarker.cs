@@ -151,11 +151,11 @@ namespace ExifDateTimeMaker
                 }
 
                 int count = 1;
-                string fileName = Path.GetFileNameWithoutExtension(info.FullName);
-
+                string originalName = Path.GetFileNameWithoutExtension(info.FullName);
+                string fileName = originalName;
                 while (File.Exists($"{dir}\\{fileName}{info.Extension}"))
                 {
-                    fileName = string.Format("{0} ({1})", fileName, count++);
+                    fileName = string.Format("{0} ({1})", originalName, count++);
                 }
                 if (count > 1)
                     Console.WriteLine(string.Format("{0} - already exists. Copy by replacing it with a {1}.", info.Name, fileName + info.Extension));

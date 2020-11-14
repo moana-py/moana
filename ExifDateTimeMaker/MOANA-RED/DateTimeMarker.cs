@@ -13,20 +13,25 @@ namespace ExifDateTimeMaker
     {
         string rootDirectory = "";
         string outputDirectory = "";
+        string overwrite = "";
+        List<string> csvLines = new List<string>();
         string dateTimeMode = "";
         bool recursive = false;
 
-        public DateTimeMarker(string d, string m, bool r, string od)
+        public DateTimeMarker(string d, string m, bool r, string od, string ow)
         {
             rootDirectory = d;
             dateTimeMode = m;
             recursive = r;
             outputDirectory = od;
+            overwrite = ow;
         }
  
         public void Execute()
         {
             SetExifDateTimdOriginal(rootDirectory);
+            if (overwrite == "skip")
+                WriteCsv();
         }
 
         private void SetExifDateTimdOriginal(string directory)
@@ -157,23 +162,63 @@ namespace ExifDateTimeMaker
                     Directory.CreateDirectory(dir);
                 }
 
-                int count = 1;
-                string originalName = Path.GetFileNameWithoutExtension(info.FullName);
-                string fileName = originalName;
-                while (File.Exists($"{dir}\\{fileName}{info.Extension}"))
+                string copyName = info.Name;
+                bool copyOption = false;
+                if (File.Exists(info.FullName))
                 {
-                    fileName = string.Format("{0} ({1})", originalName, count++);
+                    if (overwrite == "yes")
+                    {
+                        copyOption = true;
+                    }
+                    else if (overwrite == "no")
+                    {
+                        int count = 1;
+                        string originalName = Path.GetFileNameWithoutExtension(info.FullName);
+                        string fileName = originalName;
+                        while (File.Exists($"{dir}\\{fileName}{info.Extension}"))
+                        {
+                            fileName = string.Format("{0} ({1})", originalName, count++);
+                        }
+                        copyName = fileName + info.Extension;
+                        Console.WriteLine(string.Format("{0} - already exists. Copy by replacing it with a {1}.", info.Name, copyName));
+                    }
+                    else if (overwrite == "skip")
+                    {
+                        csvLines.Add($"{info.FullName}, {DateTime.Now.ToString()}");
+                        return;
+                    }
                 }
-                if (count > 1)
-                    Console.WriteLine(string.Format("{0} - already exists. Copy by replacing it with a {1}.", info.Name, fileName + info.Extension));
-                else
-                    Console.WriteLine(string.Format("{0} - copy is successful.", info.Name));
-
-                File.Copy(info.FullName, Path.Combine(dir, fileName + info.Extension), true);
+                File.Copy(info.FullName, Path.Combine(dir, copyName), copyOption);
+                Console.WriteLine(string.Format("{0} - copy is successful.", copyName));
             }
             catch (Exception e)
             {
                 Console.WriteLine("failed to copy file - " + e.Message);
+            }
+        }
+
+        private void WriteCsv()
+        {
+            try
+            {
+                FileMode mode = FileMode.Append;
+                string csvName = rootDirectory + "\\Copy Skip Report.csv";
+                if (!File.Exists(csvName))
+                {
+                    mode = FileMode.Create;
+                }
+                FileStream fs = new FileStream(csvName, mode, FileAccess.Write);
+                using (StreamWriter sw = new StreamWriter(fs, Encoding.UTF8))
+                {
+                    if (mode == FileMode.Create)
+                        sw.WriteLine("파일경로,일시");
+                    csvLines.ForEach(sw.WriteLine);
+                }
+                fs.Close();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("write csv is failed - " + e.Message);
             }
         }
     }

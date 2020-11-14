@@ -15,7 +15,7 @@ namespace MOANA_RED
             CommandOption c = new CommandOption();
             if (c.SetCommandOption(args) == false)
                 return;
-            var dateTimeMaker = new DateTimeMarker(c.rootDirectory, c.dateTimeMode, c.recursive, c.outputDirectory);
+            var dateTimeMaker = new DateTimeMarker(c.rootDirectory, c.dateTimeMode, c.recursive, c.outputDirectory, c.overwrite);
             dateTimeMaker.Execute();
         }
     }

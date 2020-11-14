@@ -10,6 +10,7 @@ namespace ExifDateTimeMaker
     {
         public string rootDirectory = "";
         public string outputDirectory = "";
+        public string overwrite = "";
         public string dateTimeMode = "";
         public bool recursive = false;
 
@@ -54,6 +55,10 @@ namespace ExifDateTimeMaker
                         else if (command == "/r")
                         {
                             recursive = true;
+                        }
+                        else if (command == "/overwrite")
+                        {
+                            overwrite = args[++i];
                         }
                         else
                         {

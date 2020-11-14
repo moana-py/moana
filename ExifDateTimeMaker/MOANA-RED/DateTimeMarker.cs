@@ -38,8 +38,15 @@ namespace ExifDateTimeMaker
             }
             if (!string.IsNullOrWhiteSpace(outputDirectory) && !Directory.Exists(outputDirectory))
             {
-                Console.WriteLine(outputDirectory + " - directory is not exist. ignore /to option.");
-                outputDirectory = "";
+                Console.WriteLine(outputDirectory + " - directory is not exist. create directory.");
+                try
+                {
+                    Directory.CreateDirectory(outputDirectory);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"create \"{outputDirectory}\" directory is failed - {e.Message}");
+                }
             }
 
             Console.WriteLine("\nDirectory = " + directory);
